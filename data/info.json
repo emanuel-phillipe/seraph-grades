@@ -1,0 +1,72 @@
+{
+  "unauthorized": {
+    "code": 401,
+    "message": "Falha na Autenticação"
+  },
+  "forbidden": {
+    "code": 403,
+    "message": "Usuário não autenticado"
+  },
+  "notFound": {
+    "code": 404,
+    "message": "Usuário não encontrado"
+  },
+  "notAllowed": {
+    "code": 405,
+    "message": "Usuário já autenticado"
+  },
+  "accepted": {
+    "code": 202,
+    "message": "Requisição aceita"
+  },
+  "ok": {
+    "code": 200,
+    "message": "Requisição ok"
+  },
+  "created": {
+    "code": 201,
+    "message": "Criado com êxito"
+  },
+  "badRequest": {
+    "code": 400,
+    "message": "Falha na requisição"
+  },
+
+
+  "info_already_exist": {
+    "code": 422,
+    "message": "Informações já utilizadas"
+  },
+  "user_not_authenticated": {
+    "code": 401,
+    "message": "Usuário não autenticado"
+  },
+  "user_created": {
+    "code": 201,
+    "message": "Usuário criado"
+  },
+  "user_already_authenticated": {
+    "code": 405,
+    "message": "Usuário já autenticado"
+  },
+  "user_not_found": {
+    "code": 404,
+    "message": "Usuário não encontrado"
+  },
+  "user_forbbiden": {
+    "code": 403,
+    "message": "Usuário não autenticado"
+  },
+  "incorrect_info": {
+    "code": 403,
+    "message": "Informação incorreta"
+  },
+  "server_error": {
+    "code": 500,
+    "message": "Falha interna do servidor"
+  },
+  "user_succesfully_logged": {
+    "code": 200,
+    "message": "Usuário autenticado com êxito"
+  }
+}
