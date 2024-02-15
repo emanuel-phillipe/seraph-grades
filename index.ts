@@ -7,9 +7,11 @@ import { resolve } from "path";
 import { subjectRouter } from "./routes/subjectRouting";
 import { activityRouter } from "./routes/activityRouting";
 import { phaseRouter } from "./routes/phaseRouting";
+import cors from "cors"
 
 const app: Express = express();
 app.use(express.json())
+app.use(cors())
 app.use(cookieParser())
  
 dotenv.config({path: resolve(__dirname, "../.env")});
