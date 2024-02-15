@@ -30,6 +30,10 @@ app.use("/api/v1/subject", subjectRouter);
 app.use("/api/v1/activity", activityRouter);
 app.use("/api/v1/phase", phaseRouter);
 
+app.get("/teste", (req:Request, res:Response) => {
+  return res.status(200).send("Oi")
+})
+
 connectToDatabase()
 app.listen(3000, ()=>{
   console.log("Server is running");
