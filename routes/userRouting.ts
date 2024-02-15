@@ -121,7 +121,8 @@ userRouter.put("/change", validateChangeBodyInfo, authenticationValidation, asyn
   //VALIDAÇÃO
   if(!user) res.status(jsonData.user_not_found.code).send(jsonData.user_not_found.message)
 
-  const bodyResponse = req.body
+  let bodyResponse = req.body
+  if(bodyResponse.name) bodyResponse.name = bodyResponse.name.toUpperCase()
 
   await user.updateOne(bodyResponse)
 
