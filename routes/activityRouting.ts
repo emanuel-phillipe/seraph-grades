@@ -5,7 +5,7 @@ import mongoose, { Mongoose, isObjectIdOrHexString, model } from "mongoose";
 import { UserSchema } from "../models/User";
 import express, { Request, Response } from "express";
 import { authenticationValidation } from "./userRouting";
-import { IActivity, IPhase } from "../models/interfaces/OthersInterface";
+import { IActivity } from "../models/interfaces/OthersInterface";
 import { validateActivityChangeInfo } from "../validation/ActivityValidation";
 
 export var jsonData:IResponses = require("../data/info.json")
@@ -14,6 +14,23 @@ dotenv.config()
 const User = model<IUserSchema>("User", UserSchema)
 
 export const activityRouter = express.Router();
+
+activityRouter.get("/all/:phaseName/:subjectName", authenticationValidation, async (req:Request, res:Response) => {
+
+  const user = await User.findById(res.get("id"))
+
+  const phase = user.phases.filter((phase) => {return phase.name == Number.parseInt(req.params.phaseName)})
+
+  // VALIDAÇÃO
+  if(!phase[0]) return res.status(jsonData.notFound.code).send("Etapa não encontrada")
+
+  const subject = phase[0].subjects.filter((subject) => {return subject.name == req.params.subjectName})
+
+  // VALIDAÇÃO
+  if(!subject[0]) return res.status(jsonData.notFound.code).send("Matéria não encontrada")
+
+  return res.status(jsonData.ok.code).send(subject[0].activities)
+})
 
 activityRouter.get("/:phaseName/:subjectName/:activityId", authenticationValidation, async (req:Request, res:Response) => {
 
