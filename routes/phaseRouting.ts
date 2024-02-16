@@ -23,7 +23,7 @@ phaseRouter.get("/all", authenticationValidation, async (req:Request, res:Respon
   return res.status(jsonData.ok.code).send(user.phases)
 })
 
-phaseRouter.get("/:phaseName", authenticationValidation, async (req:Request, res:Response) => {
+phaseRouter.get("info/:phaseName", authenticationValidation, async (req:Request, res:Response) => {
 
   const id = res.get("id")
   const user = await User.findById(id)
