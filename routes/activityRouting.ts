@@ -6,6 +6,7 @@ import { UserSchema } from "../models/User";
 import express, { Request, Response } from "express";
 import { authenticationValidation } from "./userRouting";
 import { IActivity, IPhase } from "../models/interfaces/OthersInterface";
+import { validateActivityChangeInfo } from "../validation/ActivityValidation";
 
 export var jsonData:IResponses = require("../data/info.json")
 dotenv.config()
@@ -187,4 +188,28 @@ activityRouter.post("/grade/:phaseName/:subjectName/:activityId", authentication
   await user.updateOne({phases: phaseListWithoutUpdated})
 
   return res.status(jsonData.accepted.code).send("Nota atualizada com êxito")
+})
+
+activityRouter.put("/change/:phaseName/:subjectName/:activityId", validateActivityChangeInfo, authenticationValidation, async (req:Request, res:Response) => {
+  
+  const user = await User.findById(req.get("id"))
+
+  const phase = user.phases.filter((phase) => {return phase.name == Number.parseInt(req.params.phaseName)})
+
+  // VALIDAÇÃO
+  if(!phase[0]) return res.status(jsonData.notFound.code).send("Etapa não encontrada")
+
+  const subject = phase[0].subjects.filter((subject) => {return subject.name == req.params.subjectName})
+
+  // VALIDAÇÃO
+  if(!subject[0]) return res.status(jsonData.notFound.code).send("Matéria não encontrada")
+
+  let activity = subject[0].activities.filter((activity) => {return activity._id.toString() == req.params.activityId})
+
+  // VALIDAÇÃO
+  if(!activity[0]) return res.status(jsonData.notFound.code).send("Atividade não encontrada")
+
+  await user.updateOne({_id: req.params.activityId, ...req.body})
+
+  return res.status(jsonData.accepted.code).send("Atividade atualizada com êxito")
 })
