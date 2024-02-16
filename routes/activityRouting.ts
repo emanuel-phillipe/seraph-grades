@@ -16,8 +16,7 @@ export const activityRouter = express.Router();
 
 activityRouter.get("/:phaseName/:subjectName/:activityId", authenticationValidation, async (req:Request, res:Response) => {
 
-  const id = res.get("id")
-  const user = await User.findById(id)
+  const user = await User.findById(res.get("id"))
 
   let phase = user.phases.filter((phase) => {
     return phase.name == Number.parseInt(req.params.phaseName) // PEGA A ETAPA QUE TIVER O MESMO NOME
@@ -42,8 +41,7 @@ activityRouter.get("/:phaseName/:subjectName/:activityId", authenticationValidat
 
 activityRouter.post("/create/:phaseName/:subjectName", authenticationValidation, async (req:Request, res:Response) => {
 
-  const id = res.get("id")
-  const user = await User.findById(id)
+  const user = await User.findById(res.get("id"))
 
   const bodyResponse:Array<IActivity> = req.body
 
@@ -98,8 +96,7 @@ activityRouter.post("/create/:phaseName/:subjectName", authenticationValidation,
 })
 
 activityRouter.delete("/delete/:phaseName/:subjectName/:activityId", authenticationValidation, async (req:Request, res:Response) => {
-  const id = res.get("id")
-  const user = await User.findById(id)
+  const user = await User.findById(res.get("id"))
 
   let phase = user.phases.filter((phase) => {
     return phase.name == Number.parseInt(req.params.phaseName) // PEGA A ETAPA QUE TIVER O MESMO NOME
@@ -150,4 +147,44 @@ activityRouter.delete("/delete/:phaseName/:subjectName/:activityId", authenticat
   await user.updateOne({phases: phaseListWithoutSelected}) // ATUALIZA AS ETAPAS NO BANCO DE DADOS DO USUÁRIO
 
   return res.status(jsonData.ok.code).send("Atividade removida com êxito")
+})
+
+activityRouter.post("/grade/:phaseName/:subjectName/:activityId", authenticationValidation, async (req:Request, res:Response) => {
+
+  const user = await User.findById(res.get("id"))
+
+  const phase = user.phases.filter((phase) => {return phase.name == Number.parseInt(req.params.phaseName)})
+
+  // VALIDAÇÃO
+  if(!phase[0]) return res.status(jsonData.notFound.code).send("Etapa não encontrada")
+
+  const subject = phase[0].subjects.filter((subject) => {return subject.name == req.params.subjectName})
+
+  // VALIDAÇÃO
+  if(!subject[0]) return res.status(jsonData.notFound.code).send("Matéria não encontrada")
+
+  let activity = subject[0].activities.filter((activity) => {return activity._id.toString() == req.params.activityId})
+
+  // VALIDAÇÕES
+  if(!activity[0]) return res.status(jsonData.notFound.code).send("Atividade não encontrada")
+  if(req.body.grade > activity[0].total) return res.status(jsonData.badRequest.code).send("Nota maior que o total da atividade")
+
+  activity[0].grade = req.body.grade
+
+  // LÓGICA PARA SALVAR A NOTA NA ATIVIDADE
+
+  let phaseListWithoutUpdated = user.phases.filter((phase) => {return phase.name != Number.parseInt(req.params.phaseName)})
+  let subjectListWithoutUpdated = phase[0].subjects.filter((subject) => {return subject.name != req.params.subjectName})
+  let activityListWithoutUpdated = subject[0].activities.filter((activity) => {return activity._id.toString() != req.params.activityId})
+
+  activityListWithoutUpdated.push(activity[0])
+  subject[0].activities = activityListWithoutUpdated
+
+  subjectListWithoutUpdated.push(subject[0])
+  phase[0].subjects = subjectListWithoutUpdated
+
+  phaseListWithoutUpdated.push(phase[0])
+  await user.updateOne({phases: phaseListWithoutUpdated})
+
+  return res.status(jsonData.accepted.code).send("Nota atualizada com êxito")
 })
