@@ -15,7 +15,20 @@ const User = model<IUserSchema>("User", UserSchema)
 
 export const subjectRouter = express.Router();
 
-subjectRouter.get("/:phaseName/:subjectName", authenticationValidation, async (req:Request, res:Response) => {
+subjectRouter.get("/all/:phaseName", authenticationValidation, async (req:Request, res:Response) => {
+  
+  const user = await User.findById(req.get("id"))
+
+  const phase = user.phases.filter((phase) => {
+    return phase.name == Number.parseInt(req.params.phaseName)
+  })
+
+  if(!phase[0]) return res.status(jsonData.notFound.code).send("Etapa não encontrada")
+
+  return res.status(jsonData.ok.code).send(phase[0].subjects)
+})
+
+subjectRouter.get("info/:phaseName/:subjectName", authenticationValidation, async (req:Request, res:Response) => {
   
   const id = res.get("id")
   const user = await User.findById(id)
