@@ -16,7 +16,6 @@ app.use(cors({
   allowedHeaders: ["Content-Type"],
   methods: "*",
   credentials: true,
-  origin: "http://localhost:3000"
 }))
 app.use(cookieParser())
  
