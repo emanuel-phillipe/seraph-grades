@@ -15,6 +15,7 @@ app.use(express.json())
 app.use(cors({
   allowedHeaders: ["Content-Type"],
   methods: "*",
+  origin: "*",
   credentials: true,
 }))
 app.use(cookieParser())
