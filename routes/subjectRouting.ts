@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 import { IUserSchema } from "../models/interfaces/UserInterface";
 import { model } from "mongoose";
 import { UserSchema } from "../models/User";
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { authenticationValidation } from "./userRouting";
 import { validateNewSubjectBodyInfo } from "../validation/SubjectValidation";
 import { ISubjectBody } from "./interfaces/SubjectInterface";
@@ -126,3 +126,5 @@ subjectRouter.delete("/delete/:phaseName/:subjectName", authenticationValidation
   await user.updateOne({phases: phaseList})
   return res.status(jsonData.accepted.code).send(jsonData.accepted.message)
 })
+
+// TO-DO: REQUISIÇÃO PARA ALTERAR INFORMAÇÕES NA MATÉRIA

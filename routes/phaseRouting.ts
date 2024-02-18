@@ -73,3 +73,5 @@ phaseRouter.delete("/delete/:phaseName", authenticationValidation, async (req:Re
 
   return res.status(jsonData.accepted.code).send(jsonData.accepted.message)
 })
+
+// TO-DO: REQUISIÇÃO PARA ALTERAR INFORMAÇÕES NA ETAPA

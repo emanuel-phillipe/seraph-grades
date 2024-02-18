@@ -28,8 +28,8 @@ export const userDeleteValidation = Joi.object({
 })
 
 export const userLoginValidation = Joi.object({
-  email: Joi.string().min(5).required(),
-  password: Joi.string().min(5).required(),
+  email: Joi.string().required(),
+  password: Joi.string().required(),
 })
 
 export function validateRegisterBodyInfo(req:Request, res:Response, next:NextFunction){
