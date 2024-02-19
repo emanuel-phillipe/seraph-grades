@@ -102,7 +102,6 @@ userRouter.post("/login", validateLoginBodyInfo, async (req:Request, res:Respons
 
   return res.cookie("auth_token", userToken, { // CRIAÇÃO DO COOKIE NA RESPOSTA
     secure: true,
-    sameSite: 'none',
     maxAge: 3600 * 1000,
   }).status(jsonData.user_succesfully_logged.code).send(jsonData.user_succesfully_logged.message)
 })
