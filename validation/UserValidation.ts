@@ -57,6 +57,7 @@ export function validateDeleteBodyInfo(req:Request, res:Response, next:NextFunct
 }
 
 export function validateLoginBodyInfo(req: Request, res:Response, next:NextFunction){
+
   let {error} = userLoginValidation.validate(req.body);
   const value = error == null;
 

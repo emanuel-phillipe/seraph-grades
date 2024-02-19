@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import { userRouter } from "./routes/userRouting";
 import mongoose from "mongoose";
@@ -9,15 +9,20 @@ import { activityRouter } from "./routes/activityRouting";
 import { phaseRouter } from "./routes/phaseRouting";
 import cors from "cors"
 
-
 const app: Express = express();
+
+app.use((req:Request, res:Response, next:NextFunction) => {
+  res.header('Access-Control-Allow-Credentials', 'true')
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+  res.header('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.header('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization')
+
+  app.use(cors())
+
+  next()
+})
+
 app.use(express.json())
-app.use(cors({
-  allowedHeaders: ["Content-Type"],
-  methods: "*",
-  origin: "*",
-  credentials: true,
-}))
 app.use(cookieParser())
  
 dotenv.config({path: resolve(__dirname, "../.env")});
@@ -43,6 +48,6 @@ app.get("/teste", (req:Request, res:Response) => {
 })
 
 connectToDatabase()
-app.listen(3000, ()=>{
+app.listen(3001, ()=>{
   console.log("Server is running");
 })
