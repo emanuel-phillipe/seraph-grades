@@ -100,11 +100,10 @@ userRouter.post("/login", validateLoginBodyInfo, async (req:Request, res:Respons
 
   const userToken = generateUserToken(userRegistered) // GERAÇÃO DO TOKEN PARA O USUÁRIO
 
-  res.cookie("auth_token", userToken, { // CRIAÇÃO DO COOKIE NA RESPOSTA
+  return res.cookie("auth_token", userToken, { // CRIAÇÃO DO COOKIE NA RESPOSTA
     httpOnly: false,
     maxAge: 60000 * 1000
-  })
-  return res.status(jsonData.user_succesfully_logged.code).send(jsonData.user_succesfully_logged.message)
+  }).status(jsonData.user_succesfully_logged.code).send(jsonData.user_succesfully_logged.message)
 })
 
 userRouter.post("/logout", authenticationValidation, (req:Request, res:Response) => {
